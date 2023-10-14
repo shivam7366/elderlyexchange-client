@@ -2,7 +2,7 @@ import React from "react";
 
 import ExperienceForm from "../../src/components/experience/ExperienceForm";
 
-function create() {
+function Create() {
   //this is an authinticated page write code for this here
 
   const [isAuth, setIsAuth] = React.useState(false);
@@ -33,4 +33,4 @@ function create() {
   );
 }
 
-export default create;
+export default Create;
