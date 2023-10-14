@@ -199,24 +199,23 @@ function Navigation() {
                   <Avatar alt="Shivam" src="/static/images/avatar/2.jpg" />
                 </IconButton>
               ) : (
-                <Link href="/signin">
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      color: "white",
-                      borderColor: "white",
-                      fontWeight: 700,
+                <Button
+                  variant="outlined"
+                  sx={{
+                    color: "white",
+                    borderColor: "white",
+                    fontWeight: 700,
 
-                      "&:hover": {
-                        backgroundColor: "white",
-                        borderColor: "#008080",
-                        color: "#008080",
-                      },
-                    }}
-                  >
-                    Sign In
-                  </Button>
-                </Link>
+                    "&:hover": {
+                      backgroundColor: "white",
+                      borderColor: "#008080",
+                      color: "#008080",
+                    },
+                  }}
+                  onClick={() => router.push("/signin")}
+                >
+                  Sign In
+                </Button>
               )}
 
               <Menu
