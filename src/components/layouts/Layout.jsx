@@ -1,6 +1,5 @@
 import React from "react";
-import Navigation from "./Navigation";
-
+import Navigation from "../layouts/Navigation";
 export default function Layout(props) {
   return (
     <>

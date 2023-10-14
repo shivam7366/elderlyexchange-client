@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Layout from "../src/components/Layouts/Layout";
+import Layout from "../src/components/layouts/Layout";
 import { Provider } from "react-redux";
 import { compose, createStore, applyMiddleware } from "redux";
 import reducers from "../src/redux/reducer/index";

@@ -1,7 +1,7 @@
 import React from "react";
 import { useRef, useState } from "react";
 import Card from "../UI/Card";
-import Loading from "../ui/Loading";
+import Loading from "../UI/Loading";
 import Button from "@mui/material/Button";
 import classes from "./ExperienceForm.module.css";
 
