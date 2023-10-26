@@ -1,25 +1,12 @@
-import axios from "axios";
+import * as api from "../../apis/index";
 
-export const signUp = (user) => async (dispatch) => {
-  const router = useRouter();
+export const signUp = (user, router) => async (dispatch) => {
   // console.log(user);
   dispatch({
     type: "USER_LOADING",
   });
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/user/register`,
-      {
-        method: "POST",
-        body: JSON.stringify(user),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await res.json();
-
+    const res = await api.registerUser(user, router);
     dispatch({
       type: "REGISTER_SUCCESS",
       payload: data,
@@ -29,6 +16,20 @@ export const signUp = (user) => async (dispatch) => {
       type: "CLEAR_ERRORS",
     });
   } catch (err) {
+    // try {
+    //   const res = await fetch(
+    //     `${process.env.NEXT_PUBLIC_API_URL}/user/register`,
+    //     {
+    //       method: "POST",
+    //       body: JSON.stringify(user),
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   );
+    //   const data = await res.json();
+
+    // }
     dispatch({
       type: "REGISTER_FAIL",
       payload: err,
@@ -36,33 +37,26 @@ export const signUp = (user) => async (dispatch) => {
   }
 };
 
-export const signIn = (user) => async (dispatch) => {
-  // console.log(user);
+export const signIn = (user, router) => async (dispatch) => {
   dispatch({
     type: "USER_LOADING",
   });
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/login`, {
-      method: "POST",
-
-      body: JSON.stringify(user),
-
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const json = await res.json();
-    console.log(json);
+    const res = await api.loginUser(user, router);
+    console.log(res);
 
     dispatch({
       type: "LOGIN_SUCCESS",
-      payload: json,
+      payload: res,
     });
+
     // window.location.href = "/";
+
     dispatch({
       type: "CLEAR_ERRORS",
     });
+    router.push("/");
   } catch (err) {
     dispatch({
       type: "LOGIN_FAIL",
@@ -71,30 +65,24 @@ export const signIn = (user) => async (dispatch) => {
   }
 };
 
-export const signOut = () => async (dispatch) => {
+export const signOut = (router) => async (dispatch) => {
   dispatch({
     type: "USER_LOADING",
   });
-
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/logout`, {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    const json = await res.json();
-    dispatch({
-      type: "LOGOUT_SUCCESS",
-      payload: json,
-    });
-
-    dispatch({
-      type: "CLEAR_ERRORS",
-    });
+    const res = await api.logoutUser();
+    // console.log(res);
+    if (res.status === 200) {
+      dispatch({
+        type: "LOGOUT_SUCCESS",
+        payload: res.data,
+      });
+      dispatch({
+        type: "CLEAR_ERRORS",
+      });
+    }
   } catch (err) {
+    console.log(err);
     dispatch({
       type: "AUTH_ERROR",
       payload: err,

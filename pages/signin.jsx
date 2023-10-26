@@ -3,50 +3,36 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-// import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { signIn, signOut } from "../src/redux/actions/UserAction";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="/">
-        Elderly Exchange
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import SnackBarAlert from "../src/components/UI/SnackBarAlert";
+import Copyright from "../src/components/UI/CopyRight";
 
 function SignIn() {
   const router = useRouter();
   const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
-  const loading = useSelector((state) => state.user.isLoading);
-  const error = useSelector((state) => state.user.error);
+  const error = useSelector((state) => state);
   const success = useSelector((state) => state.user.success);
   const [loadingText, setLoadingText] = React.useState("Sign In");
-  // console.log(error);
+  const [open, setOpen] = React.useState(true);
+  console.log(userState, error, success);
 
-  // const [user, setUser] = React.useState({});
-  // console.log(userState, loading, error, success);
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -54,18 +40,43 @@ function SignIn() {
       username: data.get("username"),
       password: data.get("password"),
     };
-    // handleSignIn(data);
-
-    dispatch(signIn(user));
+    dispatch(signIn(user, router));
   };
 
   const handleLogout = () => {
     dispatch(signOut());
     router.push("/");
   };
+  React.useEffect(() => {
+    if (success) {
+      <SnackBarAlert
+        open={open}
+        setOpen={setOpen}
+        handleClose={handleClose}
+        severity="success"
+        message="Login Successfully"
+      />;
+    }
+    if (error) {
+      <SnackBarAlert
+        open={open}
+        setOpen={setOpen}
+        handleClose={handleClose}
+        severity="error"
+        message="Oops! something went wrong!"
+      />;
+    }
+  }, [error, success]);
 
   return (
     <Container component="main" maxWidth="xs">
+      {/* <SnackBarAlert
+        open={open}
+        setOpen={setOpen}
+        handleClose={handleClose}
+        severity="success"
+        message="Login Successfully"
+      /> */}
       <CssBaseline />
       <Box
         sx={{
@@ -148,7 +159,7 @@ function SignIn() {
             </Grid>
           </Grid>
         </Box>
-        {loading && <p>Loading...</p>}
+        {userState.isLoading && <p>Loading...</p>}
       </Box>
       <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>

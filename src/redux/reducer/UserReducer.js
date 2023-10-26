@@ -16,9 +16,11 @@ const initState = {
 // console.log(item, initState.isAuthenticated);
 
 const UserReducer = (state = initState, action) => {
-  console.log(action.payload);
+  // console.log(action.payload);
+
   switch (action.type) {
     case "USER_LOADING":
+      console.log(action.payload);
       return {
         ...state,
         success: false,
@@ -38,8 +40,6 @@ const UserReducer = (state = initState, action) => {
       };
     case "LOGIN_SUCCESS":
     case "REGISTER_SUCCESS":
-      localStorage.setItem("token", action.payload?.token);
-
       return {
         ...state,
         isLoading: false,

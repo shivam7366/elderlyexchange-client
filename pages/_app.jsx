@@ -12,6 +12,7 @@ import thunk from "redux-thunk";
 
 export default function App({ Component, pageProps }) {
   const store = createStore(reducers, compose(applyMiddleware(thunk)));
+
   return (
     <Provider store={store}>
       <Layout>

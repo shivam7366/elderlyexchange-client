@@ -12,38 +12,15 @@ import Container from "@mui/material/Container";
 import { signUp } from "../src/redux/actions/UserAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="/">
-        Elderly Exchange
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import Copyright from "../src/components/UI/CopyRight";
 
 export default function SignUp() {
   const dispatch = useDispatch();
-  const userState = useSelector((state) => state.user);
-  const loading = useSelector((state) => state.user.isLoading);
-  const error = useSelector((state) => state.user.error);
-  const success = useSelector((state) => state.user.success);
   const router = useRouter();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-
-    // handleSignUp(data);
     const user = {
       name: data.get("name"),
       email: data.get("email"),
@@ -51,16 +28,7 @@ export default function SignUp() {
       password: data.get("password"),
     };
 
-    dispatch(signUp(user));
-    //if successfully sign up, redirect to home page
-    if (success) {
-      console.log("entered success");
-      router.push("/");
-    }
-    if (!success) {
-      console.log("entered error");
-      // router.push("/signup");
-    }
+    dispatch(signUp(user, router));
   };
 
   return (

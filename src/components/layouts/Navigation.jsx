@@ -18,7 +18,7 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material";
-
+import SnackBarAlert from "../UI/SnackBarAlert";
 import MenuIcon from "@mui/icons-material/Menu";
 // import AdbIcon from "@mui/icons-material/Adb";
 import { useSelector, useDispatch } from "react-redux";
@@ -28,13 +28,17 @@ import { signOut } from "../../redux/actions/UserAction";
 
 const drawerWidth = 240;
 
-function Navigation() {
+function Navigation({ isAuthenticated }) {
   const userState = useSelector((state) => state.user);
   // console.log(userState);
 
   // const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const dispatch = useDispatch();
   const router = useRouter();
+  const loading = useSelector((state) => state.user.isLoading);
+  const error = useSelector((state) => state.user.error);
+  const success = useSelector((state) => state.user.success);
+  const data = useSelector((state) => state.user.data);
 
   const pages = [
     {
@@ -49,9 +53,14 @@ function Navigation() {
   const settings = [
     {
       name: "Profile",
+      onclick: () => router.push("/profile"),
     },
     {
       name: "Logout",
+      onclick: () => {
+        dispatch(signOut(router));
+        handleCloseUserMenu();
+      },
     },
   ];
 
@@ -96,6 +105,18 @@ function Navigation() {
       </List>
     </Box>
   );
+  React.useEffect(() => {
+    if (success) {
+      <SnackBarAlert
+        opened={true}
+        severity="success"
+        message={data?.message}
+      />;
+    }
+    if (error) {
+      <SnackBarAlert opened={true} severity="error" message={data?.message} />;
+    }
+  }, [success, error]);
 
   return (
     <>
@@ -194,7 +215,7 @@ function Navigation() {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              {userState.isAuthenticated ? (
+              {isAuthenticated ? (
                 <IconButton sx={{ p: 0 }} onClick={handleOpenUserMenu}>
                   <Avatar alt="Shivam" src="/static/images/avatar/2.jpg" />
                 </IconButton>
@@ -235,7 +256,7 @@ function Navigation() {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting.name}>
+                  <MenuItem key={setting.name} onClick={setting.onclick}>
                     <Typography textAlign="center">{setting.name}</Typography>
                   </MenuItem>
                 ))}

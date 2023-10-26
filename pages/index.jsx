@@ -1,7 +1,9 @@
 import Head from "next/head";
 import Image from "next/image";
-
+import React from "react";
+import SnackBarAlert from "../src/components/UI/SnackBarAlert";
 import ExperienceList from "../src/components/experience/ExperienceList";
+import { useSelector } from "react-redux";
 
 const DUMMY_EXPERIENCES = [
   {
@@ -21,6 +23,29 @@ const DUMMY_EXPERIENCES = [
 ];
 
 export default function Home(props) {
+  const success = useSelector((state) => state.user.success);
+  const error = useSelector((state) => state.user.error);
+  React.useEffect(() => {
+    if (success) {
+      console.log(success, "from signin ");
+      return (
+        <SnackBarAlert
+          opened={true}
+          severity="success"
+          message="Login Successfully"
+        />
+      );
+    }
+    if (error) {
+      return (
+        <SnackBarAlert
+          opened={true}
+          severity="error"
+          message="Something Went Wrong"
+        />
+      );
+    }
+  }, [success, error]);
   return (
     <div>
       <Head>
